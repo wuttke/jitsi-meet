@@ -37,6 +37,19 @@ function insertTextMsg(id, msg) {
     }
 }
 
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+}
+
 /**
  * Sets the hint and thanks messages. Will be executed on load event.
  */
@@ -62,6 +75,20 @@ function onLoad() {
     }
 
     insertTextMsg('hintMessage', getHint());
+
+    var jwt = findGetParameter('jwt')
+    if (!jwt) {
+        jwt = window.sessionStorage.getItem('jwt');
+    }
+
+    if (jwt) {
+        // TODO check this is a practitioner token
+        // TODO URL via configuration
+        var body = JSON.parse(atob(jwt.split(".")[1]));
+        if (body.redirect) {
+            window.location.replace('https://sprechstunde.meona.de/api/finish?jwt=' + jwt);
+        }
+    }
 }
 
 window.onload = onLoad;
