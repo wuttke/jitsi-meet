@@ -82,11 +82,10 @@ function onLoad() {
     }
 
     if (jwt) {
-        // TODO check this is a practitioner token
         // TODO URL via configuration
         var body = JSON.parse(atob(jwt.split(".")[1]));
         if (body.redirect) {
-            window.location.replace('https://sprechstunde.meona.de/api/finish?jwt=' + jwt);
+            window.location.replace('https://sprechstunde.meona.de/api/finish?meetingJwtToken=' + jwt);
         }
     }
 }
